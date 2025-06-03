@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Uploader</title>
+
+    <script src="../lib/main.js" defer></script>
+    <link rel="stylesheet" href="../main.css">
+</head>
+
+<body>
+
+    <h1>Anime Game Firebase Uploader</h1>
+
+    <div id="signIn" hidden>
+        <p>Sign in with your admin account</p>
+        <label for="username">Username</label>
+        <input type="text" id="username"><br><br>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" ><br><br>
+
+        <button id="signInButton">Sign in</button>
+    </div>
+    <div id="selection">
+        <button id="nameUploaderButton">Upload anime titles</button>
+        <button id="gameUploaderButton">Upload</button>
+    </div>
+    <div id="nameUploader">
+        <p>List all anime titles here:</p>
+        <div id="list">
+            <input type="text" id=""><br><br>
+        </div>
+        <p>Current array:</p>
+        <p id="arrayDisplay"></p>
+        <button id="uploadList">Upload to Firebase</button>
+    </div>
+    <div id="uploader" class="row" hidden>
+        <div class="column">
+            <label for="animeName">Anime name</label>
+            <input type="text" id="animeName"><br><br>
+
+            <label for="folderName">Folder name</label>
+            <input type="text" id="folderName" ><br><br>
+
+
+            <label for="firstFrameImage">First frame:</label>
+            <input type="file" id="firstFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="secondFrameImage">Second frame:</label>
+            <input type="file" id="secondFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="thirdFrameImage">Third frame:</label>
+            <input type="file" id="thirdFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="fourthFrameImage">Fourth frame:</label>
+            <input type="file" id="fourthFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="fifthFrameImage">Fifth frame:</label>
+            <input type="file" id="fifthFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="sixthFrameImage">Sixth frame:</label>
+            <input type="file" id="sixthFrameImage" accept="image/png, image/jpeg"><br><br>
+
+            <label for="firstHint">MAL rating</label>
+            <input type="text" id="firstHint" ><br><br>
+            
+            <label for="secondHint">Demographic</label>
+            <input type="text" id="secondHint"><br><br>
+            
+            <label for="thirdHint">Anime season</label>
+            <input type="text" id="thirdHint"><br><br>
+
+            <label for="fourthHint">Genres</label>
+            <input type="text" id="fourthHint"><br><br>
+
+            <label for="fifthHint">Studios</label>
+            <input type="text" id="fifthHint"><br><br>
+
+            <p id="results"></p>
+            <button id="upload">Upload data</button>
+        </div>
+        <div class="column">
+            <img id="firstImage" class="frame" src="test.jpg">
+            <img id="secondImage" class="frame" src="test.jpg">
+            <img id="thirdImage" class="frame" src="test.jpg">
+            <img id="fourthImage" class="frame" src="test.jpg">
+            <img id="fifthImage" class="frame" src="test.jpg">
+            <img id="sixthImage" class="frame" src="test.jpg">
+
+        </div>
+    </div>
+
+</body>
+</html>
