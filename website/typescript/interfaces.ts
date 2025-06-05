@@ -1,5 +1,7 @@
+//Not meant to be uploaded to firestore, meant for transfering data.
 export interface GameData {
     animeName: string,
+    enabled: boolean
     folderName: string,
     firstFrame: File,
     secondFrame: File,
