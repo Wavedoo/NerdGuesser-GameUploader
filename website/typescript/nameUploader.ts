@@ -35,7 +35,7 @@ const display = document.getElementById("display") as HTMLParagraphElement
 const upload = document.getElementById("upload") as HTMLButtonElement
 
 names.addEventListener("change", updateArray)
-upload.addEventListener("click", uploadArray)
+upload.addEventListener("click", uploadNames)
 
 function updateArray(){
     arr = names.value.split("\n")
@@ -51,13 +51,35 @@ function displayArray(){
     display.innerHTML = arr.join("<br>")
 }
 
+//2 writes and 1 read to bring my network egress down on the client side.
+async function uploadNames(){
+    console.log("Upload started.")
+    await updateDoc(namesRef, {
+        names: arrayUnion(...arr)
+    }).then(() => {
+        console.log("Anime names list updated successfully.");
+    }).catch(() => {
+        console.log("Failed to update anime names lists");
+    });
+
+    dbArr = await getFirestoreArray()
+    await updateDoc(globalRef, {
+        animeListCount: dbArr.length
+    }).then(() => {
+        console.log("AnimeListCount updated successfully.");
+    }).catch(() => {
+        console.log("Failed to update animeListCount");
+    });
+}
+
+
 /* 
 Time complexity because I am concerned here.
 n = names in firestore array
 m = names meant to be uploaded
 O(n+m)
 */
-async function uploadArray(){
+async function oldUploadArray(){
     console.log("Upload clicked")
     dbArr = await getFirestoreArray()// O(n) probably
     console.log("getFromFirestoreArray: ", dbArr);
