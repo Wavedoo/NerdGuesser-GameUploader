@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
-import { getFirestore, collection} from "firebase/firestore"
+import { getFirestore, collection, arrayUnion, updateDoc, doc} from "firebase/firestore"
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,3 +20,14 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const gameCollection = collection(db, "AnimeFrameGuesser")
 export const listCollection = collection(db, "AnimeFrameDays")
+export const namesRef = doc(db, "AnimeInformation", "AnimeNames")
+
+export async function uploadNameArray(arr: Array<string>){
+    await updateDoc(namesRef, {
+        names: arrayUnion(...arr)
+    }).then(() => {
+        console.log("Anime names list updated successfully.");
+    }).catch(() => {
+        console.log("Failed to update anime names lists");
+    });
+}

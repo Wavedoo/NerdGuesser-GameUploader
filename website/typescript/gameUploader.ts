@@ -1,6 +1,8 @@
-import { app, auth, gameCollection, listCollection} from "./firebase";
+import { app, auth, gameCollection, listCollection, uploadNameArray} from "./firebase";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
+import { firestoreData } from "./interfaces";
+import { addDoc, doc, getDocs, limit, orderBy, query } from "firebase/firestore";
 // import { getStorage, ref, uploadBytes } from "firebase/storage"
 // import { getFirestore, collection, addDoc, doc } from "firebase/firestore"
 // import { onAuthStateChanged } from "firebase/auth";
@@ -15,9 +17,9 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+//Firestore
 //Storage
 const storage = getStorage()
-const folderRef = ref(storage, "AnimeFrameGuesser")
 
 
 //Game uploader div
@@ -72,13 +74,49 @@ async function uploadData() {
         result.innerHTML = "Folder name must be alphanumeric with no white space"
     }
     if(!validText()){
-            result.innerHTML = "All hints must be filled."
+        result.innerHTML = "All hints must be filled."
     }
     await uploadImages().then(() =>
         console.log("All images uploaded.")
     )
+    /* const data = await getFirestoreData()
+    await uploadFirestore(data)
+    await uploadNameArray([animeName.value])
+    console.log("Upload data function complete."); */
+
+}
+function uploadFirestore(data: firestoreData){
+    addDoc(gameCollection, data).then(() => {
+        console.log("Data successfully uploaded!", data)
+    }).catch(() => {
+        console.log("Failed to upload data: ", data)
+    });
 }
 
+async function getFirestoreData(): Promise<firestoreData> {
+    let data: firestoreData = {
+        name: animeName.value,
+        day: await getNextDay(),
+        enabled: false,
+        folderName: folderName.value,
+        hints: [
+            hint1.value,
+            hint2.value,
+            hint3.value,
+            hint4.value,
+            hint5.value,
+        ],
+        firstFrameGuesses: 0,
+        secondFrameGuesses: 0,
+        thirdFrameGuesses: 0,
+        fourthFrameGuesses: 0,
+        fifthFrameGuesses: 0,
+        sixthFrameGuesses: 0,
+        failedGuesses: 0,
+        totalGuesses: 0
+    }
+    return data
+}
 
 function hasImages(): Boolean{
     if (firstFrameInput.files && firstFrameInput.files[0] &&
@@ -127,6 +165,20 @@ function validFolderName(): Boolean {
         return false
     }
 }
+
+async function getNextDay(): Promise<number> {
+    //Assumes no days have been deleted. nvm i choose to just get the largest day and + 1
+    const dayQuery = query(gameCollection, orderBy("day", "desc"), limit(1));
+    const daySnapshot = await getDocs(dayQuery);
+    if(daySnapshot.docs){
+        console.log("Docs found: ", daySnapshot.docs[0])
+        console.log("Returning: ", daySnapshot.docs[0].data()["day"] as number + 1)
+        return daySnapshot.docs[0].data()["day"] as number + 1
+    }else{
+        console.log("Docs not found returing 1")
+        return 1
+    }
+}
 function displayImage(image: HTMLImageElement) {
     return (event: Event) => {
         console.log("Testing!");
@@ -138,6 +190,9 @@ function displayImage(image: HTMLImageElement) {
 } 
 
 async function uploadImages(): Promise<any> {
+    const path = "AnimeFrameGuesser/" + folderName.value
+    const folderRef = ref(storage, path)
+
     let firstRef = ref(folderRef, "1")
     let secondRef = ref(folderRef, "2")
     let thirdRef = ref(folderRef, "3")

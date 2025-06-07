@@ -1,4 +1,4 @@
-import { app, db, auth, gameCollection, listCollection} from "./firebase";
+import { app, db, auth, gameCollection, listCollection, uploadNameArray, namesRef} from "./firebase";
 // import { getStorage, ref, uploadBytes } from "firebase/storage"
 // import { getFirestore, collection, addDoc, doc } from "firebase/firestore"
 import { collection, addDoc, doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
@@ -9,7 +9,6 @@ console.log("nameUploader.ts is working!")
 
 //Firestore
 const globalRef = doc(db, "other", "global")
-const namesRef = doc(db, "AnimeInformation", "AnimeNames")
 // var globalSnap = await getDoc(globalRef)
 
 //Authentication
@@ -54,13 +53,7 @@ function displayArray(){
 //2 writes and 1 read to bring my network egress down on the client side.
 async function uploadNames(){
     console.log("Upload started.")
-    await updateDoc(namesRef, {
-        names: arrayUnion(...arr)
-    }).then(() => {
-        console.log("Anime names list updated successfully.");
-    }).catch(() => {
-        console.log("Failed to update anime names lists");
-    });
+    await uploadNameArray(arr)
 
     dbArr = await getFirestoreArray()
     await updateDoc(globalRef, {

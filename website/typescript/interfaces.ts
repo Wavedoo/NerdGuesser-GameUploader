@@ -17,9 +17,18 @@ export interface GameData {
 }
 
 export interface firestoreData {
-    day: number,
     //TODO: Make name into an array to allow for weebs
     name: string,
+    day: number,
+    enabled: boolean,
+    folderName: string,
+    hints: Array<string>,
     firstFrameGuesses: number,
-    
+    secondFrameGuesses: number,
+    thirdFrameGuesses: number,
+    fourthFrameGuesses: number,
+    fifthFrameGuesses: number,
+    sixthFrameGuesses: number,
+    failedGuesses: number,
+    totalGuesses: number
 }

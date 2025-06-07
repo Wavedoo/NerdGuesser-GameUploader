@@ -89,9 +89,7 @@ async function uploadDocument(): Promise<any>{
     return gameData
 } */
 
-function getNextDay(): number {
-    return 4
-}
+
 /*function displayImage(event: Event, displayId: String){
     const input = event.target as HTMLInputElement
     const preview = document.querySelector("img");
