@@ -1,4 +1,4 @@
-import { app, auth, gameCollection, listCollection} from "./main";
+import { app, auth, gameCollection, listCollection} from "./firebase";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 // import { getStorage, ref, uploadBytes } from "firebase/storage"

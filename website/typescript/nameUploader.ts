@@ -1,11 +1,16 @@
-import { app, auth, gameCollection, listCollection} from "./main";
+import { app, db, auth, gameCollection, listCollection} from "./firebase";
 // import { getStorage, ref, uploadBytes } from "firebase/storage"
 // import { getFirestore, collection, addDoc, doc } from "firebase/firestore"
-import { collection, addDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 // Initialize Firebase
-console.log("The issue starts here!")
+console.log("nameUploader.ts is working!")
+
+//Firestore
+const globalRef = doc(db, "other", "global")
+const namesRef = doc(db, "AnimeInformation", "AnimeNames")
+// var globalSnap = await getDoc(globalRef)
 
 //Authentication
 onAuthStateChanged(auth, (user) => {
@@ -18,8 +23,83 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+var arr: string[] = []
+var dbArr: string[] = []
+var dbSet = new Set<String>();
+
 
 //Name uploader div
-const list = document.getElementById("list") as HTMLDivElement
-const arrayDisplay = document.getElementById("arrayDisplay") as HTMLParagraphElement
-const uploadListButton = document.getElementById("uploadList") as HTMLButtonElement
+// const list = document.getElementById("list") as HTMLDivElement
+const names = document.getElementById("names") as HTMLTextAreaElement
+const display = document.getElementById("display") as HTMLParagraphElement
+const upload = document.getElementById("upload") as HTMLButtonElement
+
+names.addEventListener("change", updateArray)
+upload.addEventListener("click", uploadArray)
+
+function updateArray(){
+    arr = names.value.split("\n")
+    arr.forEach((value, index) =>{
+        arr[index] = value.trim()
+    });
+    arr = arr.filter(item => item != "")
+    console.log(arr)
+    displayArray()
+}
+
+function displayArray(){
+    display.innerHTML = arr.join("<br>")
+}
+
+/* 
+Time complexity because I am concerned here.
+n = names in firestore array
+m = names meant to be uploaded
+O(n+m)
+*/
+async function uploadArray(){
+    console.log("Upload clicked")
+    dbArr = await getFirestoreArray()// O(n) probably
+    console.log("getFromFirestoreArray: ", dbArr);
+    dbArr = dbArr.map(name => {
+        return name.toUpperCase()
+    });
+    console.log("dbArr.map()", dbArr)
+    dbSet = new Set(dbArr); // O(n)
+    console.log("db set  = ", dbSet)
+    checkForDuplicates()
+    console.log("Final array to union: ", arr)
+    //Upload from here.
+    await updateDoc(namesRef, {
+        names: arrayUnion(...arr)
+    }).then(() => {
+        console.log("Doc updated! This is the then log!")
+    }).finally(() => {
+        console.log("Finally.")
+    });
+    console.log("Doc updated?")
+}
+//O (whatever it is let's say n)
+async function getFirestoreArray(): Promise<string[]>{
+    const namesSnap = await getDoc(namesRef)
+    if(namesSnap.exists()){
+        const namesArr = namesSnap.data()
+        console.log("Document found. Array: ", namesArr)
+        return namesArr["names"] as string[]
+    }else{
+        console.log("Document not found. Returning not found.")
+        return []
+    }
+}
+//O(m)
+function checkForDuplicates(){
+    // arr = 
+    console.log("Check for duplicates: ", arr)
+    console.log("Set to check: ", dbSet)
+    arr = arr.filter((name) => {
+        console.log("name.toUpperCase()", name.toUpperCase())
+        console.log("In set: ", dbSet.has(name.toUpperCase()))
+        return !dbSet.has(name.toUpperCase())
+    });
+    console.log("Duplicates removed: ", arr)
+}

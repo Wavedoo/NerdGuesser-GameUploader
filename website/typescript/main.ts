@@ -1,20 +1,17 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { app,  auth} from "./firebase";
 import { firebaseConfig } from "./firebaseConfig";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged  } from "firebase/auth";
 import { getFirestore, collection} from "firebase/firestore"
-
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // Initialize Firebase
-console.log("The issue starts here!")
-export const app = initializeApp(firebaseConfig);
+console.log("Code starts here!")
 
 //Authentication
-export const auth = getAuth(app)
 onAuthStateChanged(auth, (user) => {
     if(user) {
         const uid = user.uid;
@@ -25,11 +22,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-
-//Firestore
-export const db = getFirestore(app)
-export const gameCollection = collection(db, "AnimeFrameGuesser")
-export const listCollection = collection(db, "AnimeFrameDays")
 
 //This is super messy, but this is meant for my personal use so I'm okay with it.
 //HTML
