@@ -8,7 +8,6 @@ import { onAuthStateChanged } from "firebase/auth";
 console.log("nameUploader.ts is working!")
 
 //Firestore
-const globalRef = doc(db, "other", "global")
 // var globalSnap = await getDoc(globalRef)
 
 //Authentication
@@ -54,15 +53,6 @@ function displayArray(){
 async function uploadNames(){
     console.log("Upload started.")
     await uploadNameArray(arr)
-
-    dbArr = await getFirestoreArray()
-    await updateDoc(globalRef, {
-        animeListCount: dbArr.length
-    }).then(() => {
-        console.log("AnimeListCount updated successfully.");
-    }).catch(() => {
-        console.log("Failed to update animeListCount");
-    });
 }
 
 
@@ -72,7 +62,7 @@ n = names in firestore array
 m = names meant to be uploaded
 O(n+m)
 */
-async function oldUploadArray(){
+/* async function oldUploadArray(){
     console.log("Upload clicked")
     dbArr = await getFirestoreArray()// O(n) probably
     console.log("getFromFirestoreArray: ", dbArr);
@@ -93,9 +83,9 @@ async function oldUploadArray(){
         console.log("Finally.")
     });
     console.log("Doc updated?")
-}
+} */
 //O (whatever it is let's say n)
-async function getFirestoreArray(): Promise<string[]>{
+/* async function getFirestoreArray(): Promise<string[]>{
     const namesSnap = await getDoc(namesRef)
     if(namesSnap.exists()){
         const namesArr = namesSnap.data()
@@ -105,7 +95,7 @@ async function getFirestoreArray(): Promise<string[]>{
         console.log("Document not found. Returning not found.")
         return []
     }
-}
+} */
 //O(m)
 function checkForDuplicates(){
     // arr = 

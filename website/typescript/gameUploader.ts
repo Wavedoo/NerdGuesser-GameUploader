@@ -79,10 +79,10 @@ async function uploadData() {
     await uploadImages().then(() =>
         console.log("All images uploaded.")
     )
-    /* const data = await getFirestoreData()
+    const data = await getFirestoreData()
     await uploadFirestore(data)
     await uploadNameArray([animeName.value])
-    console.log("Upload data function complete."); */
+    console.log("Upload data function complete.");
 
 }
 function uploadFirestore(data: firestoreData){
