@@ -10,9 +10,12 @@
 <body>
     <h1>Anime Game Firebase Uploader</h1>
     <div class="column">
-        <label for="animeName">Anime name</label>
+        <label for="animeName">Anime main name</label>
         <input type="text" id="animeName"><br><br>
 
+        <label for="names">Alternative names</label>
+        <textarea name="names" id="names"></textarea><br><br>
+        
         <label for="folderName">Folder name</label>
         <input type="text" id="folderName" ><br><br>
 
@@ -54,6 +57,8 @@
         <button id="upload">Upload data</button>
     </div>
     <div class="column">
+        <p>All names:</p>
+        <p id="namesDisplay"></p>
         <img id="firstImage" class="frame" src="../placeholder.jpg">
         <img id="secondImage" class="frame" src="../placeholder.jpg">
         <img id="thirdImage" class="frame" src="../placeholder.jpg">

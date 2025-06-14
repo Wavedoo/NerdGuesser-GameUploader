@@ -21,10 +21,15 @@ onAuthStateChanged(auth, (user) => {
 //Storage
 const storage = getStorage()
 
+var arr: string[] = []
+
 
 //Game uploader div
 const animeName = document.getElementById("animeName") as HTMLInputElement
+const alternativeNames = document.getElementById("names") as HTMLTextAreaElement
 const folderName = document.getElementById("folderName") as HTMLInputElement
+const display = document.getElementById("namesDisplay") as HTMLParagraphElement
+
 
 const firstFrameInput = document.getElementById("firstFrameImage") as HTMLInputElement
 const firstImage = document.getElementById("firstImage") as HTMLImageElement
@@ -53,6 +58,10 @@ const hint5 = document.getElementById("fifthHint") as HTMLInputElement
 const uploadButton = document.getElementById("upload") as HTMLButtonElement
 const result = document.getElementById("results") as HTMLParagraphElement
 
+//Text changed listeners
+animeName.addEventListener("change", updateArray);
+alternativeNames.addEventListener("change", updateArray);
+
 //Display image event listeners
 firstFrameInput.addEventListener("change", displayImage(firstImage))
 secondFrameInput.addEventListener("change", displayImage(secondImage))
@@ -79,9 +88,9 @@ async function uploadData() {
     await uploadImages().then(() =>
         console.log("All images uploaded.")
     )
-    const data = await getFirestoreData()
+    const data = await createFirestoreData()
     await uploadFirestore(data)
-    await uploadNameArray([animeName.value])
+    await uploadNameArray(arr)
     console.log("Upload data function complete.");
 
 }
@@ -93,10 +102,11 @@ function uploadFirestore(data: firestoreData){
     });
 }
 
-async function getFirestoreData(): Promise<firestoreData> {
+async function createFirestoreData(): Promise<firestoreData> {
     let data: firestoreData = {
         name: animeName.value,
         day: await getNextDay(),
+        namesList: arr,
         enabled: false,
         folderName: folderName.value,
         hints: [
@@ -113,7 +123,9 @@ async function getFirestoreData(): Promise<firestoreData> {
         fifthFrameGuesses: 0,
         sixthFrameGuesses: 0,
         failedGuesses: 0,
-        totalGuesses: 0
+        totalGuesses: 0,
+        successRate: 0.0,
+        firstFrameRate: 0.0,
     }
     return data
 }
@@ -226,4 +238,20 @@ async function uploadImages(): Promise<any> {
         console.log('Uploaded sixth image!');
     });
     return Promise.all([firstPromise, secondPromise, thirdPromise, fourthPromise, fifthPromise, sixthPromise])
+}
+
+function updateArray(){
+    // let temp = [animeName.value]
+    arr = alternativeNames.value.split("\n")
+    arr.unshift(animeName.value);
+    arr.forEach((value, index) =>{
+        arr[index] = value.trim()
+    });
+    arr = arr.filter(item => item != "")
+    console.log(arr)
+    displayArray()
+}
+
+function displayArray(){
+    display.innerHTML = arr.join("<br>")
 }
